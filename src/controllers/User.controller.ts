@@ -1,16 +1,15 @@
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import connection from '../models/connection';
-import UserModel from '../models/User.model';
-
-const secret = process.env.JWT_SECRET || 'Secret';
+import UserService from '../services/User.service';
 
 export default class UserController {
-  constructor(private userModel = new UserModel(connection)) {}
+  constructor(private userService = new UserService()) {}
 
   public create = async (req: Request, res: Response) => {
-    await this.userModel.create(req.body);
-    const token = jwt.sign(req.body, secret);
-    res.status(201).json({ token });
+    try {
+      const token = await this.userService.create(req.body);
+      return res.status(201).json({ token });  
+    } catch (error) {
+      return res.status(500).json(error);  
+    }
   };
 }

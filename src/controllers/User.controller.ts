@@ -12,4 +12,17 @@ export default class UserController {
       return res.status(500).json(error);  
     }
   };
+
+  public login = async (req: Request, res: Response) => {
+    const { username, password } = req.body;
+
+    try {
+      const { statusCode, message } = await this.userService.login(username, password);
+      if (statusCode) return res.status(statusCode).json({ message });
+      return res.status(200).json({ token: message });  
+    } catch (error) {
+      console.log('🚀 ~ file: User.controller.ts:24 ~ UserController ~ login= ~ error', error);
+      return res.status(500).json(error);  
+    }
+  };
 }

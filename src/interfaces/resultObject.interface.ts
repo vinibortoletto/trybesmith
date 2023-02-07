@@ -1,4 +1,4 @@
 export interface IResultObject {
-  statusCode: number;
+  type: string | null;
   message: string;
 }

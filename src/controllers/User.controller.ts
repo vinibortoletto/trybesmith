@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
+import { IErrorTypes } from '../interfaces/errorTypes.interface';
 import UserService from '../services/User.service';
+import errorTypes from '../utils/errorTypes';
 
 export default class UserController {
   constructor(private userService = new UserService()) {}
@@ -14,14 +16,11 @@ export default class UserController {
   };
 
   public login = async (req: Request, res: Response) => {
-    const { username, password } = req.body;
-
     try {
-      const { statusCode, message } = await this.userService.login(username, password);
-      if (statusCode) return res.status(statusCode).json({ message });
+      const { type, message } = await this.userService.login(req.body);
+      if (type) return res.status(errorTypes[type as keyof IErrorTypes]).json({ message });
       return res.status(200).json({ token: message });  
     } catch (error) {
-      console.log('🚀 ~ file: User.controller.ts:24 ~ UserController ~ login= ~ error', error);
       return res.status(500).json(error);  
     }
   };

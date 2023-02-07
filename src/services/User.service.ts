@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { ILogin } from '../interfaces/login.interface';
 import { IResultObject } from '../interfaces/resultObject.interface';
 import { IUser } from '../interfaces/user.interface';
 import connection from '../models/connection';
@@ -15,16 +16,16 @@ export default class UserService {
     return token;
   }
 
-  public async login(username: string, password:string): Promise<IResultObject> {
-    const user = await this.userModel.findByUsername(username);
-    const error = { statusCode: 401, message: 'Username or password invalid' };
+  public async login(loginInfo: ILogin): Promise<IResultObject> {
+    const user = await this.userModel.findByUsername(loginInfo.username);
+    const error = { type: 'INVALID_USER', message: 'Username or password invalid' };
 
-    if (!user || user.password !== password) return error;
+    if (!user || user.password !== loginInfo.password) return error;
 
-    const token = jwt.sign(user, 'secret');
+    const token = jwt.sign(loginInfo, secret);
 
     return {
-      statusCode: 200,
+      type: null,
       message: token,
     };
   }

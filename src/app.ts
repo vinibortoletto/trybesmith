@@ -1,12 +1,12 @@
 import express from 'express';
 
-import OrderController from './controllers/Order.controller';
-import ProductController from './controllers/Product.controller';
-import UserController from './controllers/User.controller';
+import {
+  OrderController,
+  UserController,
+  ProductController,
+} from './controllers';
 
-import validateLogin from './middleware/validateLogin';
-import validateProducts from './middleware/validateProduct';
-import validateUsername from './middleware/validateUser';
+import { validateLogin, validateProducts, validateUser } from './middleware';
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.use(express.json());
 app.post('/products', validateProducts, productController.create);
 app.get('/products', productController.findAll);
 
-app.post('/users', validateUsername, userController.create);
+app.post('/users', validateUser, userController.create);
 app.get('/orders', orderController.findAll);
 
 app.post('/login', validateLogin, userController.login);

@@ -45,6 +45,8 @@ services:
     restart: always
     # Lista de portas mapeadas de dentro para fora do container
     # na notação porta_de_fora:porta_de_dentro
+    volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
     ports:
       # Expõe a porta padrão do banco de dados
       - 3306:3306
